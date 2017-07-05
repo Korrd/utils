@@ -77,8 +77,7 @@ echo "All set for GO pprofiling!"
 PORT="8081"
 echo "Starting socat on port $PORT..."
 
-socat -d -d TCP-LISTEN:$PORT,fork,bind=localhost UNIX:/var/run/docker.sock &
-PID_SOCAT="$!"
+socat -d -d TCP-LISTEN:$PORT,fork,bind=localhost UNIX:/var/run/docker.sock & PID_SOCAT="$!" &
 allSystemsGo $? "Socat streaming OK on port $PORT!" "Socat failed to start. Check if the port is available :("
 
 # =====================================================================================================================
