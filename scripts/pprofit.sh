@@ -77,7 +77,7 @@ echo "All set for GO pprofiling!"
 PORT="8081"
 echo "Starting socat on port $PORT..."
 
-socat -d -d TCP-LISTEN:$PORT,fork,bind=localhost UNIX:/var/run/docker.sock & PID_SOCAT="$!" &
+socat -d -d TCP-LISTEN:$PORT,fork,bind=localhost UNIX:/var/run/docker.sock &
 allSystemsGo $? "Socat streaming OK on port $PORT!" "Socat failed to start. Check if the port is available :("
 
 # =====================================================================================================================
@@ -97,7 +97,7 @@ go tool pprof -svg -$ALLOC_OBJECTS http://localhost:$PORT/debug/pprof/heap > $DA
   && go tool pprof -svg -$INUSE_SPACE http://localhost:$PORT/debug/pprof/heap > $DATETIME-$INUSE_SPACE.svg
 allSystemsGo $? "Profiling OK" "Profiling command failed to execute :("
 
-echo "Killing socat (PID: $PID_SOCAT)"
-kill $PID_SOCAT
+echo "Killing socat"
+pkill socat
 
 exit 0
