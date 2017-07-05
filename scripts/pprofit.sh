@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script was designed to run on a docker for azure node which has alpine installed.
 
 function allSystemsGo() {
   # Params: RESULTCODE, MESSAGE_OK, MESSAGE_FAIL
@@ -27,28 +28,26 @@ REPO_D="http://dl-5.alpinelinux.org/alpine/edge/community"
 grep -Fxq $REPO_A $REPOFILE
 if [ "$?" = "1" ]; then
   echo $REPO_A >> $REPOFILE
-  allSystemsGo $? "Repos updated successfully!" "Could not update repos. Check permissions and stuff :("
+  allSystemsGo $? "Repo updated successfully!" "Could not update repos. Check permissions and stuff :("
 fi
 
 grep -Fxq $REPO_B $REPOFILE
 if [ "$?" = "1" ]; then
   echo $REPO_B >> $REPOFILE
-  allSystemsGo $? "Repos updated successfully!" "Could not update repos. Check permissions and stuff :("
+  allSystemsGo $? "Repo updated successfully!" "Could not update repos. Check permissions and stuff :("
 fi
 
 grep -Fxq $REPO_C $REPOFILE
 if [ "$?" = "1" ]; then
   echo $REPO_C >> $REPOFILE
-  allSystemsGo $? "Repos updated successfully!" "Could not update repos. Check permissions and stuff :("
+  allSystemsGo $? "Repo updated successfully!" "Could not update repos. Check permissions and stuff :("
 fi
 
 grep -Fxq $REPO_D $REPOFILE
 if [ "$?" = "1" ]; then
   echo $REPO_D >> $REPOFILE
-  allSystemsGo $? "Repos updated successfully!" "Could not update repos. Check permissions and stuff :("
+  allSystemsGo $? "Repo updated successfully!" "Could not update repos. Check permissions and stuff :("
 fi
-
-allSystemsGo $? "Repos added successfully!" "Could not add the required repos to distro! Check permissions and stuff :("
 
 # Add required packages
 echo "Updating repositories..."
@@ -81,6 +80,10 @@ echo "Starting socat on port $PORT..."
 socat -d -d TCP-LISTEN:$PORT,fork,bind=localhost UNIX:/var/run/docker.sock &
 allSystemsGo $? "Socat streaming OK on port $PORT!" "Socat failed to start. Check if the port is available :("
 
+# =====================================================================================================================
+# Get profiling graphics - Memory =====================================================================================
+# =====================================================================================================================
+
 ALLOC_OBJECTS="alloc_objects"
 ALLOC_SPACE="alloc_space"
 INUSE_OBJECTS="inuse_objects"
@@ -94,3 +97,4 @@ go tool pprof -svg -$ALLOC_OBJECTS http://localhost:$PORT/debug/pprof/heap > $DA
   && go tool pprof -svg -$INUSE_SPACE http://localhost:$PORT/debug/pprof/heap > $DATETIME-$INUSE_SPACE.svg
 allSystemsGo $? "Profiling OK" "Profiling command failed to execute :("
 
+exit 0
