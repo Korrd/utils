@@ -88,13 +88,13 @@ ALLOC_OBJECTS="alloc_objects"
 ALLOC_SPACE="alloc_space"
 INUSE_OBJECTS="inuse_objects"
 INUSE_SPACE="inuse_space"
-
+TYPE="heap"
 echo "Profiling docker daemon..."
 DATETIME=`date '+%Y-%m-%d-%H-%m-%S'`
-go tool pprof -svg -$ALLOC_OBJECTS http://localhost:$PORT/debug/pprof/heap > $DATETIME-$ALLOC_OBJECTS.svg \
-  && go tool pprof -svg -$ALLOC_SPACE http://localhost:$PORT/debug/pprof/heap > $DATETIME-$ALLOC_SPACE.svg \
-  && go tool pprof -svg -$INUSE_OBJECTS http://localhost:$PORT/debug/pprof/heap > $DATETIME-$INUSE_OBJECTS.svg \
-  && go tool pprof -svg -$INUSE_SPACE http://localhost:$PORT/debug/pprof/heap > $DATETIME-$INUSE_SPACE.svg
+go tool pprof -svg -$ALLOC_OBJECTS http://localhost:$PORT/debug/pprof/$TYPE > $TYPE-$DATETIME-$ALLOC_OBJECTS.svg \
+  && go tool pprof -svg -$ALLOC_SPACE http://localhost:$PORT/debug/pprof/$TYPE > $TYPE-$DATETIME-$ALLOC_SPACE.svg \
+  && go tool pprof -svg -$INUSE_OBJECTS http://localhost:$PORT/debug/pprof/$TYPE > $TYPE-$DATETIME-$INUSE_OBJECTS.svg \
+  && go tool pprof -svg -$INUSE_SPACE http://localhost:$PORT/debug/pprof/$TYPE > $TYPE-$DATETIME-$INUSE_SPACE.svg
 allSystemsGo $? "Profiling OK" "Profiling command failed to execute :("
 
 echo "Killing socat"
